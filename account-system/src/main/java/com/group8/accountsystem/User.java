@@ -18,6 +18,10 @@ public class User {
     private String password;
     private String email;
 
+    public User() {
+
+    }
+
     public int getId() {
         return id;
     }
