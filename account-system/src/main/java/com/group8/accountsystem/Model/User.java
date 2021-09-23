@@ -1,4 +1,4 @@
-package com.group8.accountsystem;
+package com.group8.accountsystem.Model;
 
 import org.springframework.data.annotation.Id;
 
@@ -8,18 +8,26 @@ import javax.persistence.GenerationType;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "User")
+@Table(name = "Customer")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    private String userName;
+    private String firstName;
+    private String lastName;
     private String password;
     private String email;
 
     public User() {
 
+    }
+
+    public User(String firstName, String lastName, String password, String email) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.password = password;
+        this.email = email;
     }
 
     public int getId() {
@@ -30,12 +38,20 @@ public class User {
         this.id = id;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getPassword() {
