@@ -9,7 +9,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class UserController {
@@ -23,11 +25,32 @@ public class UserController {
         return "index";
     }
 
-    @GetMapping("/users")
-    public Iterable<User> getAllUsers() {
+    @GetMapping("/users") // Bytte namn till getUsers - Kan användas för att hitta alla ELLER alla med ett visst namn
+    public ResponseEntity<List<User>> getUsers(@RequestParam(required = false) String name) {
 
-        return userRepository.findAll();
+        List<User> users = new ArrayList<>();
 
+        try {
+            if (name == null) {
+                users.addAll(userRepository.findAll());
+            } else {
+                users.addAll(userRepository.findUserByName(name));
+            }
+
+            if (users.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            } else {
+                return new ResponseEntity<>(users, HttpStatus.OK);
+            }
+        } catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    @GetMapping("/users/{id}") // Funkar - fixa felmeddelande/katt vid Not found?
+    public Optional<User> getUserById(@PathVariable("id") String id) {
+        return userRepository.findById(id);
     }
 
 //    @GetMapping("/users")
