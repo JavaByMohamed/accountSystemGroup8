@@ -10,7 +10,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+@CrossOrigin("http://localhost:8080")
+@RequestMapping(value = "/api", method = RequestMethod.PUT)
 @RestController
 public class UserController {
 
@@ -18,36 +21,35 @@ public class UserController {
     private UserRepository userRepository;
 
 
-    @GetMapping("/")
-    public String home(Model model) {
-        return "index";
-    }
 
     @GetMapping("/users")
-    public Iterable<User> getAllUsers() {
+    public ResponseEntity<List<User>> getAllUsers(@RequestParam(required = false)String name){
+       try {
+           List<User> users = new ArrayList<User>();
+           if (name == null)
+               userRepository.findAll().forEach(users::add);
+            else
+                userRepository.findByNameContaining(name).forEach(users::add);
+            if (users.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+           }
+           return new ResponseEntity<>(users, HttpStatus.OK);
+       }catch (Exception e){
+            return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @GetMapping("/users/{id}")
+    public ResponseEntity<User>getUserById(@PathVariable("id")String id){
+        Optional<User> userData = userRepository.findById(id);
 
-        return userRepository.findAll();
-
+        if(userData.isPresent()){
+            return new ResponseEntity<>(userData.get(),HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
-//    @GetMapping("/users")
-//    public ResponseEntity<List<User>> getAllUsers(@RequestParam(required = false)String name){
-//        try {
-//            List<User> users = new ArrayList<User>();
-//            if (name == null)
-//                userRepository.findAll().forEach(users::add);
-//            else
-//                userRepository.findByNameContaining(name).forEach(users::add);
-//            if (users.isEmpty()) {
-//                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//            }
-//            return new ResponseEntity<>(users, HttpStatus.OK);
-//        }catch (Exception e){
-//            return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
-
-    @PostMapping("/create")
+    @PostMapping("/users")
     public String createUser(@RequestBody User user){
 
 
@@ -55,5 +57,33 @@ public class UserController {
 
         return "hello";
     }
+
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<HttpStatus> deleteUsers(@PathVariable("id")String id){
+        try {
+            userRepository.deleteById(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    //inte klar än
+    @PutMapping("/users/{id]")
+    public ResponseEntity<User>updateUser(@PathVariable("id")String id){
+        Optional<User> userData = userRepository.findById(id);
+
+        if(userData.isPresent()){
+            User _user = userData.get();
+            _user.setName(_user.getName());
+            _user.setPassword(_user.getPassword());
+            _user.setEmail(_user.getEmail());
+            return new ResponseEntity<>(userRepository.save(_user),HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 
 }
