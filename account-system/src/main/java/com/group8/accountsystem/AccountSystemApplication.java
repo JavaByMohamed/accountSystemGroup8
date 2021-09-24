@@ -7,14 +7,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication // Lägger även till @Configuration, @EnableAutoConfiguration @ComponentScan
-public class AccountSystemApplication extends SpringBootServletInitializer {
+public class AccountSystemApplication extends SpringBootServletInitializer /*implements CommandLineRunner*/ {
 
 	private static final Logger log = LoggerFactory.getLogger(AccountSystemApplication.class);
 
@@ -28,7 +25,18 @@ public class AccountSystemApplication extends SpringBootServletInitializer {
 			log.info("TESTA DATABASEN");
 			log.info("");
 
-			repository.save(new User("Carpe", "Diem", "abc123", "email@email.com"));
+			repository.save(new User("Test", "abc123", "test@gmail.com"));
 		};
 	}
+
+	// Från Youtube-tutorial Spring Boot Connect to MySQL Database Example
+
+//	@Autowired
+//	private JdbcTemplate jdbcTemplate;
+//
+//	@Override
+//	public void run(String... args) throws Exception {
+//		String sql = "INSERT INTO Customer (firstName, lastName, email, pw) VALUES (?, ?, ?, ?)";
+//		jdbcTemplate.update(sql, "Kalle", "Anka", "kalleanka@gmail.com");
+//	}
 }

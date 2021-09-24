@@ -5,17 +5,15 @@ import org.springframework.data.annotation.Id;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Table;
 
 @Entity
-@Table(name = "Customer")
+//@Document(collection = "User")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
-    private String firstName;
-    private String lastName;
+    private String id;
+    private String name;
     private String password;
     private String email;
 
@@ -23,35 +21,26 @@ public class User {
 
     }
 
-    public User(String firstName, String lastName, String password, String email) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public User(String name, String password, String email) {
+        this.name = name;
         this.password = password;
         this.email = email;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getName() {
+        return name;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getPassword() {
