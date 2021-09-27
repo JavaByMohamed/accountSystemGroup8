@@ -10,9 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import java.util.Optional;
-
 
 @CrossOrigin("http://localhost:8080")
 @RequestMapping(value = "/api", method = RequestMethod.PUT)
@@ -48,6 +46,12 @@ public class UserController {
         return userRepository.save(user);
     }
 
+    @GetMapping("/users")
+    public Iterable<User> getAllUsers() {
+
+        return userRepository.findAll();
+
+    }
     @GetMapping("/users/{id}")
     public ResponseEntity<User>getUserById(@PathVariable("id")String id){
         Optional<User> userData = userRepository.findById(id);
@@ -59,15 +63,8 @@ public class UserController {
         }
     }
 
-        @DeleteMapping("/users/{id}")
-        public ResponseEntity<HttpStatus> deleteUsers(@PathVariable("id")String id){
-            try {
-                userRepository.deleteById(id);
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }catch (Exception e){
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        }
+    @PostMapping("/users")
+    public String createUser(@RequestBody User user){
 
         @PutMapping("/update/{id}")
         public ResponseEntity<User>updateUser(@PathVariable("id")String id, @RequestBody User user){
@@ -87,4 +84,34 @@ public class UserController {
             }
         }
 
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<HttpStatus> deleteUsers(@PathVariable("id")String id){
+        try {
+            userRepository.deleteById(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    //inte klar än
+    @PutMapping("/update/{id}")
+    public ResponseEntity<User>updateUser(@PathVariable("id")String id, @RequestBody User user){
+        Optional<User> userData = userRepository.findById(id);
+
+        if(userData.isPresent()){
+            User _user = userData.get();
+
+            _user.setName(user.getName());
+            _user.setPassword(user.getPassword());
+            _user.setEmail(user.getEmail());
+            return new ResponseEntity<>(userRepository.save(_user),HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+
+}
     }
