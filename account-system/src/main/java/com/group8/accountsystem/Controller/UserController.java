@@ -52,6 +52,7 @@ public class UserController {
         return userRepository.findAll();
 
     }
+
     @GetMapping("/users/{id}")
     public ResponseEntity<User>getUserById(@PathVariable("id")String id){
         Optional<User> userData = userRepository.findById(id);
@@ -63,27 +64,6 @@ public class UserController {
         }
     }
 
-    @PostMapping("/users")
-    public String createUser(@RequestBody User user){
-
-        @PutMapping("/update/{id}")
-        public ResponseEntity<User>updateUser(@PathVariable("id")String id, @RequestBody User user){
-            Optional<User> userData = userRepository.findById(id);
-
-            if(userData.isPresent()){
-                User _user = userData.get();
-               // log.info(_user.toString());
-
-                _user.setName(user.getName());
-                _user.setPassword(user.getPassword());
-                _user.setEmail(user.getEmail());
-                return new ResponseEntity<>(userRepository.save(_user),HttpStatus.OK);
-            }
-            else{
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-        }
-
     @DeleteMapping("/users/{id}")
     public ResponseEntity<HttpStatus> deleteUsers(@PathVariable("id")String id){
         try {
@@ -94,7 +74,6 @@ public class UserController {
         }
     }
 
-    //inte klar än
     @PutMapping("/update/{id}")
     public ResponseEntity<User>updateUser(@PathVariable("id")String id, @RequestBody User user){
         Optional<User> userData = userRepository.findById(id);
@@ -112,6 +91,4 @@ public class UserController {
         }
     }
 
-
 }
-    }
