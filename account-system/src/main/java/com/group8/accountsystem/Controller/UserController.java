@@ -22,8 +22,9 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-
-    @GetMapping("/users")
+    @GetMapping(path = "/users",
+            consumes ={org.springframework.http.MediaType.APPLICATION_XML_VALUE, org.springframework.http.MediaType.APPLICATION_JSON_VALUE},
+            produces = {org.springframework.http.MediaType.APPLICATION_XML_VALUE, org.springframework.http.MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<User>> getAllUsers(@RequestParam(required = false)String name){
         try {
             List<User> users = new ArrayList<User>();
@@ -69,7 +70,7 @@ public class UserController {
         }
 
         //inte klar än
-        @PutMapping("/users/{id]")
+        @PutMapping("/update/{id}")
         public ResponseEntity<User>updateUser(@PathVariable("id")String id){
             Optional<User> userData = userRepository.findById(id);
 
