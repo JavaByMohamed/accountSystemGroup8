@@ -69,16 +69,17 @@ public class UserController {
             }
         }
 
-        //inte klar än
         @PutMapping("/update/{id}")
-        public ResponseEntity<User>updateUser(@PathVariable("id")String id){
+        public ResponseEntity<User>updateUser(@PathVariable("id")String id, @RequestBody User user){
             Optional<User> userData = userRepository.findById(id);
 
             if(userData.isPresent()){
                 User _user = userData.get();
-                _user.setName(_user.getName());
-                _user.setPassword(_user.getPassword());
-                _user.setEmail(_user.getEmail());
+               // log.info(_user.toString());
+
+                _user.setName(user.getName());
+                _user.setPassword(user.getPassword());
+                _user.setEmail(user.getEmail());
                 return new ResponseEntity<>(userRepository.save(_user),HttpStatus.OK);
             }
             else{
