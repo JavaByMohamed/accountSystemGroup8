@@ -64,7 +64,7 @@ public class UserController {
         }
     }
 
-    // Uppdaterar en user (annan endpoint)
+    // Uppdaterar en user
     @PutMapping("/users/{id}")
     public ResponseEntity<User>updateUser(@PathVariable("id")String id, @RequestBody User user){
         Optional<User> userData = userRepository.findById(id);
