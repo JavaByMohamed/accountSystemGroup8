@@ -13,13 +13,14 @@ import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin("http://localhost:8080")
-@RequestMapping(value = "/api", method = RequestMethod.PUT)
+@RequestMapping(value = "/api"/*, method = RequestMethod.PUT*/) // Detta är varför PUT gav Ambiguous method error
 @RestController
 public class UserController {
 
     @Autowired
     private UserRepository userRepository;
 
+    // Hämtar alla users eller alla med ett visst namn - kan presentera resultatet i XML och JSON
     @GetMapping(path = "/users",
             consumes ={org.springframework.http.MediaType.APPLICATION_XML_VALUE, org.springframework.http.MediaType.APPLICATION_JSON_VALUE},
             produces = {org.springframework.http.MediaType.APPLICATION_XML_VALUE, org.springframework.http.MediaType.APPLICATION_JSON_VALUE})
@@ -39,20 +40,7 @@ public class UserController {
         }
     }
 
-    @PostMapping(path = "/create",
-            consumes ={org.springframework.http.MediaType.APPLICATION_XML_VALUE, org.springframework.http.MediaType.APPLICATION_JSON_VALUE},
-            produces = {org.springframework.http.MediaType.APPLICATION_XML_VALUE, org.springframework.http.MediaType.APPLICATION_JSON_VALUE})
-    public User addUser(@RequestBody User user) {
-        return userRepository.save(user);
-    }
-
-    @GetMapping("/users")
-    public Iterable<User> getAllUsers() {
-
-        return userRepository.findAll();
-
-    }
-
+    // Hämtar en user med ett visst id, om den finns
     @GetMapping("/users/{id}")
     public ResponseEntity<User>getUserById(@PathVariable("id")String id){
         Optional<User> userData = userRepository.findById(id);
@@ -64,17 +52,20 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/users/{id}")
-    public ResponseEntity<HttpStatus> deleteUsers(@PathVariable("id")String id){
+    // Postar en ny user och visar resultatet i XML eller JSON
+    @PostMapping(path = "/users",
+            consumes ={org.springframework.http.MediaType.APPLICATION_XML_VALUE, org.springframework.http.MediaType.APPLICATION_JSON_VALUE},
+            produces = {org.springframework.http.MediaType.APPLICATION_XML_VALUE, org.springframework.http.MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<User> addUser(@RequestBody User user) {
         try {
-            userRepository.deleteById(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }catch (Exception e){
+            return new ResponseEntity<>(userRepository.save(user), HttpStatus.CREATED);
+        } catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @PutMapping("/update/{id}")
+    // Uppdaterar en user (annan endpoint)
+    @PutMapping("/users/{id}")
     public ResponseEntity<User>updateUser(@PathVariable("id")String id, @RequestBody User user){
         Optional<User> userData = userRepository.findById(id);
 
@@ -88,6 +79,28 @@ public class UserController {
         }
         else{
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // Tar bort en user
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<HttpStatus> deleteUsers(@PathVariable("id")String id){
+        try {
+            userRepository.deleteById(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // Rensar databasen
+    @DeleteMapping("/users")
+    public ResponseEntity<HttpStatus> deleteAll() {
+        try {
+            userRepository.deleteAll();
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
