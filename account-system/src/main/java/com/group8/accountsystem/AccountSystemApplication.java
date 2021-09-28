@@ -28,15 +28,4 @@ public class AccountSystemApplication extends SpringBootServletInitializer /*imp
 			repository.save(new User("Test", "abc123", "test@gmail.com"));
 		};
 	}
-
-	// Från Youtube-tutorial Spring Boot Connect to MySQL Database Example
-
-//	@Autowired
-//	private JdbcTemplate jdbcTemplate;
-//
-//	@Override
-//	public void run(String... args) throws Exception {
-//		String sql = "INSERT INTO Customer (firstName, lastName, email, pw) VALUES (?, ?, ?, ?)";
-//		jdbcTemplate.update(sql, "Kalle", "Anka", "kalleanka@gmail.com");
-//	}
 }

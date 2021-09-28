@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin("http://localhost:8080")
-@RequestMapping(value = "/api"/*, method = RequestMethod.PUT*/) // Detta är varför PUT gav Ambiguous method error
+@RequestMapping(value = "/api")
 @RestController
 public class UserController {
 
@@ -41,7 +41,9 @@ public class UserController {
     }
 
     // Hämtar en user med ett visst id, om den finns
-    @GetMapping("/users/{id}")
+    @GetMapping(path = "/users/{id}",
+            consumes ={org.springframework.http.MediaType.APPLICATION_XML_VALUE, org.springframework.http.MediaType.APPLICATION_JSON_VALUE},
+            produces = {org.springframework.http.MediaType.APPLICATION_XML_VALUE, org.springframework.http.MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<User>getUserById(@PathVariable("id")String id){
         Optional<User> userData = userRepository.findById(id);
 
@@ -65,7 +67,9 @@ public class UserController {
     }
 
     // Uppdaterar en user
-    @PutMapping("/users/{id}")
+    @PutMapping(path = "/users/{id}",
+            consumes ={org.springframework.http.MediaType.APPLICATION_XML_VALUE, org.springframework.http.MediaType.APPLICATION_JSON_VALUE},
+            produces = {org.springframework.http.MediaType.APPLICATION_XML_VALUE, org.springframework.http.MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<User>updateUser(@PathVariable("id")String id, @RequestBody User user){
         Optional<User> userData = userRepository.findById(id);
 
@@ -83,7 +87,9 @@ public class UserController {
     }
 
     // Tar bort en user
-    @DeleteMapping("/users/{id}")
+    @DeleteMapping(path = "/users/{id}",
+            consumes ={org.springframework.http.MediaType.APPLICATION_XML_VALUE, org.springframework.http.MediaType.APPLICATION_JSON_VALUE},
+            produces = {org.springframework.http.MediaType.APPLICATION_XML_VALUE, org.springframework.http.MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<HttpStatus> deleteUsers(@PathVariable("id")String id){
         try {
             userRepository.deleteById(id);
@@ -94,7 +100,9 @@ public class UserController {
     }
 
     // Rensar databasen
-    @DeleteMapping("/users")
+    @DeleteMapping(path = "/users",
+            consumes ={org.springframework.http.MediaType.APPLICATION_XML_VALUE, org.springframework.http.MediaType.APPLICATION_JSON_VALUE},
+            produces = {org.springframework.http.MediaType.APPLICATION_XML_VALUE, org.springframework.http.MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<HttpStatus> deleteAll() {
         try {
             userRepository.deleteAll();
